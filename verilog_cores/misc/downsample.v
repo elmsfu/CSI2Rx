@@ -36,48 +36,88 @@ module downsample (
 	input read_clock,
 	input [5:0] read_x,
 	input [4:0] read_y,
-	output reg [7:0] read_q
+	output reg [31:0] read_q
 );
 
+	reg [7:0] R_buffer[0:2048-1];
+	reg [7:0] G_buffer[0:2048-1];
+	reg [7:0] B_buffer[0:2048-1];
 
-	reg [7:0] buffer[0:2047];
+	// each 16x16 (256 pixels) will have 64 R, 64 B, 128 G
+	// bit growth R:6  B:6 G:7
+	// taking in a 640 pixels per line we need to accumulate 640/16 = 40 R,G, and B accumulators
+	// will 0 out as buffer is filled or treat as zero on new frame
+	reg [7 + 7:0] R_accums [39:0];
+	reg [7 + 7:0] G_accums [39:0];
+	reg [7 + 7:0] B_accums [39:0];
 
-	reg [11:0] pixel_acc;
-	reg [7:0] pixel_x;
-	reg [8:0] pixel_y;
+	// count x by 4 pixels at a time, count y 1 at a time
+	reg [7:0] pixel4_x;
+	reg [8:0] pixel1_y;
 	reg last_in_line;
 
-	wire [11:0] next_acc = pixel_acc + pixel_data[7:0] + pixel_data[15:8] + pixel_data[23:16] + pixel_data[31:24];
+	// divide by 4 to get output pixel index
+	wire [5:0] pixel_x_out 	   = pixel4_x[7:2];
+
+	// p0 is either R or Gb, p1 is either Gr or B based on line parity
+	// (even lines and odd lines respectively)
+	wire [7+7:0] pixel_acc_p0  = (pixel1_y == 0) ? 0 :
+				 ((pixel1_y[0] == 0) ? R_accums[pixel_x_out] : G_accums[pixel_x_out]);
+	wire [7+7:0] pixel_acc_p1  = (pixel1_y == 0) ? 0 :
+				 ((pixel1_y[0] == 0) ? G_accums[pixel_x_out] : B_accums[pixel_x_out]);
+
+	wire [7+7:0] next_acc_p0   = pixel_acc_p0 + pixel_data[7:0]  + pixel_data[23:16];
+	wire [7+7:0] next_acc_p1   = pixel_acc_p1 + pixel_data[15:8] + pixel_data[31:24];
 
 	always @(posedge pixel_clock)
 	begin
 		if (!in_frame) begin
-			pixel_acc <= 0;
-			pixel_x <= 0;
-			pixel_y <= 0;
+			pixel4_x 	 <= 0;
+			pixel1_y 	 <= 0;
 			last_in_line <= in_line;
 		end else begin
 			if (in_line && data_enable) begin
-				if (pixel_y[3:0] == 0) begin
-					if (&(pixel_x[1:0])) begin
-						pixel_acc <= 0;
-						buffer[{pixel_y[8:4], pixel_x[7:2]}] <= next_acc[11:4];
+				// output 1 RGB pixel every 16 lines and every 16/4 = 4 pixel4
+				if (&(pixel1_y[3:0]) && &(pixel4_x[1:0])) begin
+					// reset [RGB]_accumms
+					R_accums[pixel_x_out] <= 0;
+					G_accums[pixel_x_out] <= 0;
+					B_accums[pixel_x_out] <= 0;
+
+					R_buffer[{pixel1_y[8:4], pixel_x_out}] <= R_accums[pixel_x_out][13:6];
+					G_buffer[{pixel1_y[8:4], pixel_x_out}] <= next_acc_p0[14:7];
+					B_buffer[{pixel1_y[8:4], pixel_x_out}] <= next_acc_p1[13:6];
+				end else begin
+					// should set [RGB]_accumms
+					if (pixel1_y[0] == 0) begin
+						R_accums[pixel_x_out] <= next_acc_p0;
+						G_accums[pixel_x_out] <= next_acc_p1;
 					end else begin
-						pixel_acc <= next_acc;
+						G_accums[pixel_x_out] <= next_acc_p0;
+						B_accums[pixel_x_out] <= next_acc_p1;
 					end
-					if (pixel_x < 160)
-						pixel_x <= pixel_x + 1;
+				end
+
+				if (pixel4_x < 640/4) begin
+					pixel4_x <= pixel4_x + 1;
 				end
 			end else if (!in_line) begin
-				pixel_x <= 0;
-				pixel_acc <= 0;
+				pixel4_x 	 <= 0;
+
 				if (last_in_line)
-					pixel_y <= pixel_y + 1'b1;
+					pixel1_y <= pixel1_y + 1'b1;
 			end
 			last_in_line <= in_line;
 		end
 	end
 
-	always @(posedge read_clock)
-		read_q <= buffer[{read_y, read_x}];
+	always @(posedge read_clock) begin
+		read_q <= {
+				   8'hff, // ff for full opacitiy on alpha layer
+				   R_buffer[{read_y, read_x}],
+				   G_buffer[{read_y, read_x}],
+				   B_buffer[{read_y, read_x}]
+				   };
+	end
+
 endmodule

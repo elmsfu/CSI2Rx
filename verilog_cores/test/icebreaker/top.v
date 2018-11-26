@@ -93,7 +93,8 @@ module top(input clk12,
 
 	reg [5:0] read_x;
 	reg [4:0] read_y;
-	wire [7:0] read_data;
+	reg [1:0] read_z;
+	wire [31:0] read_data;
 	downsample ds_i(
 		.pixel_clock(video_clk),
 		.in_line(in_line),
@@ -106,6 +107,12 @@ module top(input clk12,
 		.read_y(read_y),
 		.read_q(read_data)
 	);
+
+	wire [7:0] data_byte;
+	assign data_byte =  (read_z == 2'b00) ? read_data[31:24] : (
+						(read_z == 2'b01) ? read_data[23:16] : (
+						(read_z == 2'b10) ? read_data[15:8] :
+						read_data[7:0]));
 
 	reg do_send = 1'b0;
 	wire uart_busy;
@@ -129,6 +136,7 @@ module top(input clk12,
 			do_send <= 1'b1;
 			read_x <= 0;
 			read_y <= 0;
+			read_z <= 0;
 		end
 
 		if (uart_busy)
@@ -142,11 +150,15 @@ module top(input clk12,
 			end else begin
 				if (&uart_holdoff && !uart_busy && !uart_write) begin
 					uart_write <= 1'b1;
-					if (read_x == 39) begin
-						read_y <= read_y + 1'b1;
-						read_x <= 0;
-					end else begin
-						read_x <= read_x + 1'b1;
+					read_z 	   <= read_z + 1;
+
+					if (&read_z) begin
+						if (read_x == 39) begin
+							read_y <= read_y + 1'b1;
+							read_x <= 0;
+						end else begin
+							read_x <= read_x + 1'b1;
+						end
 					end
 				end
 			end
@@ -159,7 +171,7 @@ module top(input clk12,
 	   .uart_tx(dbg_tx),     // UART transmit wire
 	   // Inputs
 	   .uart_wr_i(uart_write),   // Raise to transmit byte
-	   .uart_dat_i(read_data),  // 8-bit data
+	   .uart_dat_i(data_byte),  // 8-bit data
 	   .sys_clk_i(clk12),   // System clock, 12 MHz
 	   .sys_rst_i(areset)    // System reset
 	);
