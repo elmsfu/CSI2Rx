@@ -23,19 +23,21 @@ module uart(
   reg [8:0] shifter;
   reg uart_tx;
 
-  wire uart_busy = |bitcount[3:1];
-  wire sending = |bitcount;
+  wire uart_busy = (bitcount != 0);
+  wire sending = (bitcount != 0);
 
   // sys_clk_i is 12MHz.  We want a 3MHz clock
-
-  reg [28:0] d;
-  wire [28:0] dInc = d[28] ? (3000000) : (3000000 - 12000000);
-  wire [28:0] dNxt = d + dInc;
+   localparam BAUD = 3000000;
+   
+  reg [1:0] d;
+   //wire [28:0] dInc = d[28] ? (BAUD) : (BAUD - 12000000);
+  //wire [28:0] dNxt = d + dInc;
   always @(posedge sys_clk_i)
   begin
-    d = dNxt;
+    d <= d + 1;
   end
-  wire ser_clk = ~d[28]; // this is the 115200 Hz clock
+  //wire ser_clk = ~d[28]; // this is the baud clock
+   wire ser_clk = &d; // this is the baud clock
 
   always @(posedge sys_clk_i)
   begin
@@ -45,7 +47,7 @@ module uart(
       shifter <= 0;
     end else begin
       // just got a new byte
-      if (uart_wr_i & ~uart_busy) begin
+      if (uart_wr_i & !uart_busy) begin
         shifter <= { uart_dat_i[7:0], 1'h0 };
         bitcount <= (1 + 8 + 2);
       end

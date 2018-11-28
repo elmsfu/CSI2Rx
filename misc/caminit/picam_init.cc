@@ -200,39 +200,36 @@ static void cam_init() {
 	write_cmos_sensor(0x4797,  0x0E); //??
 	write_cmos_sensor(0x479B,  0x0E); //??
 	
-	//write_cmos_sensor(0x0157,  232); // ANA_GAIN_GLOBAL_A
-	//write_cmos_sensor(0x0257,  232); // ANA_GAIN_GLOBAL_B
+	write_cmos_sensor(0x0157,  100); // ANA_GAIN_GLOBAL_A
+	write_cmos_sensor(0x0257,  100); // ANA_GAIN_GLOBAL_B
 
 	
-	//write_cmos_sensor(0x0600,  0x00); // Test pattern: disable
-	//write_cmos_sensor(0x0601,  0x00); // Test pattern: disable
+	write_cmos_sensor(0x0600,  0x00); // Test pattern: disable
+	write_cmos_sensor(0x0601,  0x00); // Test pattern: disable
 
-#if 0
+#if 1
 	write_cmos_sensor(0x0600,  0x00); // Test pattern: solid colour
 	write_cmos_sensor(0x0601,  0x01); //
 
-	write_cmos_sensor(0x0602,  0x02); // Test pattern: red
-	write_cmos_sensor(0x0603,  0xAA); //
+	write_cmos_sensor(0x0602,  0x00); // Test pattern: red
+	write_cmos_sensor(0x0603,  0x40); //
 
-	write_cmos_sensor(0x0604,  0x02); // Test pattern: greenR
-	write_cmos_sensor(0x0605,  0xAA); //
+	write_cmos_sensor(0x0604,  0x00); // Test pattern: greenR
+	write_cmos_sensor(0x0605,  0x80); //
 
-	write_cmos_sensor(0x0606,  0x02); // Test pattern: blue
-	write_cmos_sensor(0x0607,  0xAA); //
+	write_cmos_sensor(0x0606,  0x01); // Test pattern: blue
+	write_cmos_sensor(0x0607,  0x00); //
 
-	write_cmos_sensor(0x0608,  0x02); // Test pattern: greenB
-	write_cmos_sensor(0x0609,  0xAA); //
-
+	write_cmos_sensor(0x0608,  0x00); // Test pattern: greenB
+	write_cmos_sensor(0x0609,  0x80); //
 
 	write_cmos_sensor(0x0624,  0x0A); // Test pattern width
 	write_cmos_sensor(0x0625,  0x00); //
 	
 	write_cmos_sensor(0x0626,  0x07); // Test pattern height
-	write_cmos_sensor(0x0627,  0x80); //
-
-
+	write_cmos_sensor(0x0627,  0x80); //	
 #endif
-	
+
 	write_cmos_sensor(0x0100, 0x01);
 }
 

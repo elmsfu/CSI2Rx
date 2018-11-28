@@ -108,18 +108,18 @@ module top(input clk12,
 		.read_q(read_data)
 	);
 
-	wire [7:0] data_byte;
-	assign data_byte =  (read_z == 2'b00) ? read_data[31:24] : (
-						(read_z == 2'b01) ? read_data[23:16] : (
-						(read_z == 2'b10) ? read_data[15:8] :
-						read_data[7:0]));
+	reg [7:0] data_byte;
+	// assign data_byte =  (read_z == 2'b00) ? read_data[31:24] : (
+	// 					(read_z == 2'b01) ? read_data[23:16] : (
+	// 					(read_z == 2'b10) ? read_data[15:8] :
+	// 					read_data[7:0]));
 
 	reg do_send = 1'b0;
 	wire uart_busy;
 	reg uart_write;
 	reg [13:0] btn_debounce;
 	reg btn_reg;
-	reg [12:0] uart_holdoff;
+	reg [1:0] uart_holdoff;
 
 	always @(posedge clk12)
 	begin
@@ -149,9 +149,16 @@ module top(input clk12,
 				do_send <= 1'b0;
 			end else begin
 				if (&uart_holdoff && !uart_busy && !uart_write) begin
+				   uart_holdoff <= 0;
 					uart_write <= 1'b1;
 					read_z 	   <= read_z + 1;
-
+				   case (read_z)
+				     2'b00: data_byte <= 8'haa;
+				     2'b01: data_byte <= read_x;
+				     2'b10: data_byte <= read_y;
+				     2'b11: data_byte <= read_z;
+				   endcase
+				   
 					if (&read_z) begin
 						if (read_x == 39) begin
 							read_y <= read_y + 1'b1;
