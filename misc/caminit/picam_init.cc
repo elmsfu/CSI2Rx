@@ -237,7 +237,7 @@ static void cam_init() {
 }
 
 int main() {
-	enum ftdi_interface ifnum = INTERFACE_B;
+	enum ftdi_interface ifnum = INTERFACE_A;
 	fprintf(stderr, "init..\n");
 	ftdi_init(&ftdic);
 	ftdi_set_interface(&ftdic, ifnum);

@@ -22,7 +22,30 @@
  *
  */
 
-module top(input clk12,
+
+module pll(
+        input  clock_in,
+        output clock_out,
+        output locked
+        );
+
+SB_PLL40_CORE #(
+                .FEEDBACK_PATH("SIMPLE"),
+                .DIVR(4'b0001),         // DIVR =  1
+                .DIVF(7'b0111100),      // DIVF = 60
+                .DIVQ(3'b101),          // DIVQ =  5
+                .FILTER_RANGE(3'b001)   // FILTER_RANGE = 1
+        ) uut (
+                .LOCK(locked),
+                .RESETB(1'b1),
+                .BYPASS(1'b0),
+                .REFERENCECLK(clock_in),
+                .PLLOUTCORE(clock_out)
+                );
+
+endmodule
+
+module top(input clk25,
 		   input mpsse_sda, mpsse_scl, inout cam_sda, cam_scl, output cam_enable,
 		   input dphy_clk, input [1:0] dphy_data, input dphy_lp,
 		   output LEDR_N, LEDG_N, LED1, LED2, LED3, LED4, LED5,
@@ -91,6 +114,16 @@ module top(input clk12,
 	assign LED1 = video_clk;
 	assign {LED5, LED4, LED3, LED2} = (payload_frame&&payload_valid) ? payload_data[5:2] : 0;
 
+   wire 	   clk12;
+   wire 	   clk24;
+   pll hpll (.clock_in(clk25), .clock_out(clk24));
+   always @(posedge clk24) begin
+      clk12 <= ~clk12;
+   end
+   
+
+   
+   
 	reg [5:0] read_x;
 	reg [4:0] read_y;
 	reg [1:0] read_z;
