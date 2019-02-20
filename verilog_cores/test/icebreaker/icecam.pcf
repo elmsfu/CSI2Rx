@@ -25,3 +25,6 @@ set_io dphy_lp 43 # 48 #P1A8
 
 set_io clk25 20
 # set_io dbg_tx 13
+
+set_io i2c_sel 39
+set_io csi_sel 40

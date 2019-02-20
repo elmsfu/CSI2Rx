@@ -46,15 +46,22 @@ SB_PLL40_CORE #(
 endmodule
 
 module top(input clk25,
-		   input mpsse_sda, mpsse_scl, inout cam_sda, cam_scl, output cam_enable,
-		   input dphy_clk, input [1:0] dphy_data, input dphy_lp,
+		   input  mpsse_sda, mpsse_scl, inout cam_sda, cam_scl, output cam_enable,
+		   input  dphy_clk, input [1:0] dphy_data, input dphy_lp,
 		   output LEDR_N, LEDG_N, LED1, LED2, LED3, LED4, LED5,
-		   input BTN_N, BTN1, BTN2, BTN3,
+		   input  BTN_N, BTN1, BTN2, BTN3,
+		   output i2c_sel,
+		   output csi_sel,
 		   output dbg_tx);
 
+   assign i2c_sel = 1'b1;
+   assign csi_sel = 1'b1;
+   
+   
 	wire areset = !BTN_N;
 	assign cam_scl = mpsse_scl ? 1'bz : 1'b0;
-    assign cam_sda = mpsse_sda ? 1'bz : 1'b0;
+        assign cam_sda = mpsse_sda ? 1'bz : 1'b0;
+   
 	assign cam_enable = 1'b1;
 	wire video_clk;
 	wire in_line, in_frame, vsync;
