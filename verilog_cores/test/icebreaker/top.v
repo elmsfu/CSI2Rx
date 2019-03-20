@@ -55,7 +55,7 @@ module top(input clk25,
 		   output dbg_tx);
 
    assign i2c_sel = 1'b1;
-   assign csi_sel = 1'b1;
+   assign csi_sel = 1'b0;
    
    
 	wire areset = !BTN_N;
