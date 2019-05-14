@@ -1,0 +1,2 @@
+set_io dphy_clk 37 #P1B9
+set_io dbg_dphy_clk 12
