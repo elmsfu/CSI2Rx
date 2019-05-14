@@ -57,8 +57,7 @@ module top(input clk25,
 		   output dbg_tx);
 
    assign i2c_sel = 1'b0;
-   assign csi_sel = 1'b0;
-   //assign dbg_dphy_clk = dphy_clk;
+   assign csi_sel = 1'b1;
    
    
 	wire areset = !BTN_N;
@@ -105,10 +104,12 @@ module top(input clk25,
 		.in_line(in_line),
 		.in_frame(in_frame),
 
+		.dbg_dphy_clk(dbg_dphy_clk),
 		.dbg_aligned_valid(aligned_valid),
 		.dbg_raw_deser(raw_deser),
 		.dbg_raw_ddr(raw_ddr),
 		.dbg_wait_sync(wait_sync)
+		    
 	);
 
 

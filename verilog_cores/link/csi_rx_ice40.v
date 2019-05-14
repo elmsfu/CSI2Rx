@@ -36,26 +36,27 @@ module csi_rx_ice40 #(
 	parameter [5:0] VIDEO_DT = 6'h2A, // Video payload data type (6'h2A = 8-bit raw, 6'h2B = 10-bit raw, 6'h2C = 12-bit raw)
 	parameter [15:0] MAX_LEN = 8192 // Max expected packet len, used as timeout
 )(
-	input dphy_clk_lane,
-	input [LANES-1:0] dphy_data_lane,
-	input dphy_lp_sense,
+	input 		     dphy_clk_lane,
+	input [LANES-1:0]    dphy_data_lane,
+	input 		     dphy_lp_sense,
 
-	input areset,
+	input 		     areset,
 
-	output word_clk,
-	output [31:0] payload_data,
-	output payload_enable,
-	output payload_frame,
+	output 		     word_clk,
+	output [31:0] 	     payload_data,
+	output 		     payload_enable,
+	output 		     payload_frame,
 
 	output [2*LANES-1:0] dbg_raw_ddr,
 	output [8*LANES-1:0] dbg_raw_deser,
 	output [8*LANES-1:0] dbg_aligned,
-	output [LANES-1:0] dbg_aligned_valid,
-	output dbg_wait_sync,
+	output [LANES-1:0]   dbg_aligned_valid,
+	output 		     dbg_wait_sync,
+	output 		     dbg_dphy_clk,
 
-	output vsync,
-	output in_line,
-	output in_frame
+	output 		     vsync,
+	output 		     in_line,
+	output 		     in_frame
 );
 
 	wire dphy_clk, dphy_clk_pre;
@@ -72,6 +73,9 @@ module csi_rx_ice40 #(
 		.USER_SIGNAL_TO_GLOBAL_BUFFER(dphy_clk_pre),
 		.GLOBAL_BUFFER_OUTPUT(dphy_clk)
 	);
+
+   assign dbg_dphy_clk = dphy_clk;
+   
 	
 	wire dphy_lp;
 	SB_IO #(
