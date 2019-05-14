@@ -56,7 +56,7 @@ module top(input clk25,
 		   output dbg_video_clk,
 		   output dbg_tx);
 
-   assign i2c_sel = 1'b1;
+   assign i2c_sel = 1'b0;
    assign csi_sel = 1'b0;
    //assign dbg_dphy_clk = dphy_clk;
    
