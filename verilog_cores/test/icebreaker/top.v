@@ -52,10 +52,13 @@ module top(input clk25,
 		   input  BTN_N, BTN1, BTN2, BTN3,
 		   output i2c_sel,
 		   output csi_sel,
+		   output dbg_dphy_clk,
+		   output dbg_video_clk,
 		   output dbg_tx);
 
-   assign i2c_sel = 1'b0;
-   assign csi_sel = 1'b1;
+   assign i2c_sel = 1'b1;
+   assign csi_sel = 1'b0;
+   //assign dbg_dphy_clk = dphy_clk;
    
    
 	wire areset = !BTN_N;
@@ -74,6 +77,9 @@ module top(input clk25,
 	wire wait_sync;
 	wire payload_frame;
 
+   assign dbg_video_clk = video_clk;
+
+   
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
 		.PAIRSWAP(2'b10), // lane pair swap (inverts data for given  lane)
