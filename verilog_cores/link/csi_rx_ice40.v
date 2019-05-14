@@ -74,7 +74,6 @@ module csi_rx_ice40 #(
 		.GLOBAL_BUFFER_OUTPUT(dphy_clk)
 	);
 
-   assign dbg_dphy_clk = dphy_clk;
    
 	
 	wire dphy_lp;
@@ -85,6 +84,8 @@ module csi_rx_ice40 #(
 		.PACKAGE_PIN(dphy_lp_sense),
 		.D_IN_0(dphy_lp)
 	);
+
+      assign dbg_dphy_clk = dphy_lp;
 
 	reg [1:0] div;
 	always @(posedge dphy_clk or posedge areset)
