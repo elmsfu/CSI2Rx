@@ -39,6 +39,8 @@ module csi_rx_ice40 #(
 	input 		     dphy_clk_lane,
 	input [LANES-1:0]    dphy_data_lane,
 	input 		     dphy_lp_sense,
+	input 		     dphy_lp_p,
+	input 		     dphy_lp_n,
 
 	input 		     areset,
 
@@ -77,15 +79,17 @@ module csi_rx_ice40 #(
    
 	
 	wire dphy_lp;
-	SB_IO #(
-		.PIN_TYPE(6'b000001),
-		.IO_STANDARD("SB_LVDS_INPUT")
-	) lp_compare (
-		.PACKAGE_PIN(dphy_lp_sense),
-		.D_IN_0(dphy_lp)
-	);
+	// SB_IO #(
+	// 	.PIN_TYPE(6'b000001),
+	// 	.IO_STANDARD("SB_LVDS_INPUT")
+	// ) lp_compare (
+	// 	.PACKAGE_PIN(dphy_lp_sense),
+	// 	.D_IN_0(dphy_lp)
+	// );
 
-      assign dbg_dphy_clk = dphy_lp;
+   assign dphy_lp = dphy_lp_p;
+   assign dbg_dphy_clk = dphy_lp_p;
+   
 
 	reg [1:0] div;
 	always @(posedge dphy_clk or posedge areset)
