@@ -48,12 +48,12 @@ endmodule
 module top(input clk25,
 		   input  mpsse_sda, mpsse_scl, inout cam_sda, cam_scl, output cam_enable,
 		   input  dphy_clk, input [1:0] dphy_data, input dphy_lp,
-		   output LEDR_N, LEDG_N, LED1, LED2, LED3, LED4, LED5,
-		   input  BTN_N, BTN1, BTN2, BTN3,
 		   input  dphy_lp_p,
 		   input  dphy_lp_n,
 		   output i2c_sel,
 		   output csi_sel,
+		   output dbg_wait_sync,
+		   output [1:0] dbg_aligned_valid,
 		   output dbg_dphy_clk,
 		   output dbg_video_clk,
 		   output dbg_tx);
@@ -62,7 +62,8 @@ module top(input clk25,
    assign csi_sel = 1'b1;
    
    
-	wire areset = !BTN_N;
+   wire 		  areset = 0;
+//!BTN_N;
 	assign cam_scl = mpsse_scl ? 1'bz : 1'b0;
         assign cam_sda = mpsse_sda ? 1'bz : 1'b0;
    
@@ -78,8 +79,9 @@ module top(input clk25,
 	wire wait_sync;
 	wire payload_frame;
 
-   assign dbg_video_clk = video_clk;
-
+   //assign dbg_video_clk = video_clk;
+   assign    dbg_wait_sync = wait_sync;
+   assign    dbg_aligned_valid = raw_ddr[1:0];
    
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
@@ -127,10 +129,10 @@ module top(input clk25,
 			vsync_monostable <= vsync_monostable + 1'b1;
 	
 	
-	assign LEDR_N = !sclk_div[22];
-	assign LEDG_N = !(|vsync_monostable);
-	assign LED1 = video_clk;
-	assign {LED5, LED4, LED3, LED2} = (payload_frame&&payload_valid) ? payload_data[5:2] : 0;
+	// assign LEDR_N = !sclk_div[22];
+	// assign LEDG_N = !(|vsync_monostable);
+	// assign LED1 = video_clk;
+	// assign {LED5, LED4, LED3, LED2} = (payload_frame&&payload_valid) ? payload_data[5:2] : 0;
 
    wire 	   clk12;
    wire 	   clk24;
@@ -151,7 +153,7 @@ module top(input clk25,
 		.in_line(in_line),
 		.in_frame(!vsync),
 		.pixel_data(payload_data),
-		.data_enable(payload_frame&&payload_valid),
+		.data_enable(payload_frame && payload_valid),
 
 		.read_clock(clk12),
 		.read_x(read_x),
@@ -174,16 +176,16 @@ module top(input clk25,
 
 	always @(posedge clk12)
 	begin
-		btn_reg <= BTN1;
+		// btn_reg <= BTN1;
 
-		if (btn_reg)
-			btn_debounce <= 0;
-		else if (!&(btn_debounce))
-			btn_debounce <= btn_debounce + 1;
+		// if (btn_reg)
+		// 	btn_debounce <= 0;
+		// else if (!&(btn_debounce))
+		// 	btn_debounce <= btn_debounce + 1;
 
 
 		uart_write <= 1'b0;
-		if (btn_reg && &btn_debounce && !do_send) begin
+		if (!do_send) begin
 			do_send <= 1'b1;
 			read_x <= 0;
 			read_y <= 0;

@@ -87,8 +87,8 @@ module csi_rx_ice40 #(
 	// 	.D_IN_0(dphy_lp)
 	// );
 
-   assign dphy_lp = dphy_lp_p;
-   assign dbg_dphy_clk = dphy_lp_p;
+   //assign dphy_lp = dphy_lp_p;
+   //assign dbg_dphy_clk = dphy_clk;
    
 
 	reg [1:0] div;
