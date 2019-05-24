@@ -55,6 +55,7 @@ module csi_rx_ice40 #(
 	output [LANES-1:0]   dbg_aligned_valid,
 	output 		     dbg_wait_sync,
 	output 		     dbg_dphy_clk,
+  	output 		     dbg_dphy_lp,
 
 	output 		     vsync,
 	output 		     in_line,
@@ -87,9 +88,9 @@ module csi_rx_ice40 #(
 	// 	.D_IN_0(dphy_lp)
 	// );
 
-   //assign dphy_lp = dphy_lp_p;
-   //assign dbg_dphy_clk = dphy_clk;
-   
+   assign dphy_lp = dphy_lp_p;
+   assign dbg_dphy_clk = dphy_clk;
+   assign dbg_dphy_lp = dphy_lp_p;
 
 	reg [1:0] div;
 	always @(posedge dphy_clk or posedge areset)

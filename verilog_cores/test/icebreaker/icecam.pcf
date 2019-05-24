@@ -1,5 +1,3 @@
-set_io mpsse_sda 10 # 6 #FTDI D0
-set_io mpsse_scl 9 #FTDI D1
 
 set_io cam_enable 4 # 3 #P1A7
 
@@ -29,12 +27,15 @@ set_io clk25 20
 # set_io dbg_tx 13
 # PMOD  0  1  2  3  4  5  6  7
 #       9 10 11 12 47  2 48 46
+set_io mpsse_scl 9 #FTDI D1
+set_io mpsse_sda 10 # 6 #FTDI D0
 set_io dbg_tx 11 #PMOD data 2
 set_io dbg_dphy_clk 12
-set_io dbg_video_clk 47
+set_io dbg_dphy_lp 47
+#set_io dbg_video_clk 47
 set_io dbg_wait_sync 2
-set_io dbg_aligned_valid[0] 48
-set_io dbg_aligned_valid[1] 46
+set_io dbg_extra[0] 48
+set_io dbg_extra[1] 46
 
 set_io i2c_sel 39
 set_io csi_sel 40

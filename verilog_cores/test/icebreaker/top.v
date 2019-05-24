@@ -53,8 +53,9 @@ module top(input clk25,
 		   output i2c_sel,
 		   output csi_sel,
 		   output dbg_wait_sync,
-		   output [1:0] dbg_aligned_valid,
+		   output [1:0] dbg_extra,
 		   output dbg_dphy_clk,
+		   output dbg_dphy_lp,
 		   output dbg_video_clk,
 		   output dbg_tx);
 
@@ -78,10 +79,9 @@ module top(input clk25,
 	wire [1:0] aligned_valid;
 	wire wait_sync;
 	wire payload_frame;
-
    //assign dbg_video_clk = video_clk;
    assign    dbg_wait_sync = wait_sync;
-   assign    dbg_aligned_valid = raw_ddr[1:0];
+   assign    dbg_extra = raw_ddr[1:0];
    
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
@@ -114,7 +114,8 @@ module top(input clk25,
 		.dbg_aligned_valid(aligned_valid),
 		.dbg_raw_deser(raw_deser),
 		.dbg_raw_ddr(raw_ddr),
-		.dbg_wait_sync(wait_sync)
+		.dbg_wait_sync(wait_sync),
+		.dbg_dphy_lp(dbg_dphy_lp),
 		    
 	);
 
@@ -134,7 +135,7 @@ module top(input clk25,
 	// assign LED1 = video_clk;
 	// assign {LED5, LED4, LED3, LED2} = (payload_frame&&payload_valid) ? payload_data[5:2] : 0;
 
-   wire 	   clk12;
+   reg 		   clk12;
    wire 	   clk24;
    pll hpll (.clock_in(clk25), .clock_out(clk24));
    always @(posedge clk24) begin
