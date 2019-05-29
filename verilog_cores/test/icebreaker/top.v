@@ -53,7 +53,7 @@ module top(input clk25,
 		   output i2c_sel,
 		   output csi_sel,
 		   output dbg_wait_sync,
-		   output [1:0] dbg_extra,
+		   output [3:0] dbg_extra,
 		   output dbg_dphy_clk,
 		   output dbg_dphy_lp,
 		   output dbg_video_clk,
@@ -81,7 +81,7 @@ module top(input clk25,
 	wire payload_frame;
    //assign dbg_video_clk = video_clk;
    assign    dbg_wait_sync = wait_sync;
-   assign    dbg_extra = raw_ddr[1:0];
+   assign    dbg_extra = raw_ddr;
    
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
