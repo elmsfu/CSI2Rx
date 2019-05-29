@@ -116,6 +116,7 @@ module top(input clk25,
 		.dbg_raw_ddr(raw_ddr),
 		.dbg_wait_sync(wait_sync),
 		.dbg_dphy_lp(dbg_dphy_lp),
+		//.dbg_sreset(dbg_wait_sync),
 		    
 	);
 

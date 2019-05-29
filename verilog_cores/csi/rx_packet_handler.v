@@ -67,7 +67,7 @@ module csi_rx_packet_handler #(
 	wire is_hdr;
 
 	reg [15:0] packet_len;
-	reg [2:0] state;
+	reg [2:0] state = 3'b000;
 	reg [15:0] bytes_read;
 
 	always @(posedge clock)
@@ -155,6 +155,6 @@ module csi_rx_packet_handler #(
 
 	assign is_hdr = data_enable && (state == 3'b001);
 
-	assign sync_wait = (state == 3'b001);
+	assign sync_wait = (state == 3'b000);
 	assign packet_done = (state == 3'b011) || lp_detect;
 endmodule

@@ -56,6 +56,7 @@ module csi_rx_ice40 #(
 	output 		     dbg_wait_sync,
 	output 		     dbg_dphy_clk,
   	output 		     dbg_dphy_lp,
+	output 		     dbg_sreset,
 
 	output 		     vsync,
 	output 		     in_line,
@@ -90,8 +91,8 @@ module csi_rx_ice40 #(
 
    assign dphy_lp = dphy_lp_p;
    assign dbg_dphy_clk = dphy_clk;
-   assign dbg_dphy_lp = dphy_lp_p;
-
+   assign dbg_dphy_lp = dphy_lp;
+   
 	reg [1:0] div;
 	always @(posedge dphy_clk or posedge areset)
 		if (areset)
@@ -101,7 +102,7 @@ module csi_rx_ice40 #(
 	assign word_clk = div[1];
 	
 	wire sreset;
-	reg [7:0] sreset_ctr;
+	reg [7:0] sreset_ctr = 8'h00;
 	always @(posedge word_clk or posedge areset)
 		if (areset)
 			sreset_ctr <= 0;
@@ -109,6 +110,7 @@ module csi_rx_ice40 #(
 			sreset_ctr <= sreset_ctr + 1'b1;
 			
 	assign sreset = !(&sreset_ctr);
+   assign dbg_sreset = sreset;
 	
 	wire byte_packet_done, wait_for_sync;
 	wire [LANES*8-1:0] aligned_bytes;
@@ -182,8 +184,6 @@ module csi_rx_ice40 #(
 		.word_frame(comb_word_frame)
 	);
 
-	assign dbg_wait_sync = wait_for_sync;
-
 	csi_rx_packet_handler #(
 		.VC(VC),
 		.FS_DT(FS_DT),
@@ -199,7 +199,7 @@ module csi_rx_ice40 #(
 		.data_enable(comb_word_en),
 		.data_frame(comb_word_frame),
 
-		.lp_detect(!dphy_lp),
+		.lp_detect(dphy_lp),
 
 		.sync_wait(wait_for_sync),
 		.packet_done(word_packet_done),
@@ -212,4 +212,7 @@ module csi_rx_ice40 #(
 		.in_frame(in_frame),
 		.in_line(in_line)
 	);
+
+	assign dbg_wait_sync = wait_for_sync;
+
 endmodule
