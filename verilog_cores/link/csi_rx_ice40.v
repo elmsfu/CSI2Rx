@@ -28,7 +28,7 @@
 
 module csi_rx_ice40 #(
 	parameter LANES = 2, // lane count
-	parameter PAIRSWAP = 2'b10, // lane pair swap (inverts data for given  lane)
+	parameter PAIRSWAP = 2'b00, // lane pair swap (inverts data for given  lane)
 
 	parameter [1:0] VC = 2'b00, // MIPI CSI-2 "virtual channel"
 	parameter [5:0] FS_DT = 6'h00, // Frame start data type

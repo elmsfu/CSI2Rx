@@ -81,7 +81,8 @@ module top(input clk25,
 	wire payload_frame;
    //assign dbg_video_clk = video_clk;
    assign    dbg_wait_sync = wait_sync;
-   assign    dbg_extra = raw_ddr;
+   assign    dbg_extra[1:0] = raw_ddr[1:0];
+   assign    dbg_extra[3:2] = aligned_valid;
    
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
