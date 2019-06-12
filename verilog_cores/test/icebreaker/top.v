@@ -84,6 +84,7 @@ module top(input clk25,
    assign    dbg_extra[1:0] = raw_ddr[1:0];
    assign    dbg_extra[3:2] = aligned_valid;
    //assign    dbg_extra = raw_ddr;
+   //assign    dbg_extra[3:2] = raw_deser[1:0];
    
 	csi_rx_ice40 #(
 		.LANES(2), // lane count

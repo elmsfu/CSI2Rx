@@ -72,7 +72,7 @@ module dphy_rx_byte_align(
 
 			if (packet_done) begin
 				valid_data <= found_sync;
-			end else if (wait_for_sync && found_sync && !valid_data) begin
+			end else if (found_sync && !valid_data) begin
 				// Waiting for sync, just found it now so use sync position as offset
 				valid_data <= 1'b1;
 				data_offs <= sync_offs;
