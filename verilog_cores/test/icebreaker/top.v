@@ -81,12 +81,13 @@ module top(input clk25,
 	wire payload_frame;
    //assign dbg_video_clk = video_clk;
    assign    dbg_wait_sync = wait_sync;
-   assign    dbg_extra[1:0] = raw_ddr[1:0];
-   assign    dbg_extra[3:2] = aligned_valid;
+   //assign    dbg_extra[1:0] = raw_ddr[1:0];
+   //assign    dbg_extra[3:2] = aligned_valid;
+   assign    dbg_extra = raw_ddr;
    
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
-		.PAIRSWAP(2'b10), // lane pair swap (inverts data for given  lane)
+		.PAIRSWAP(2'b00), // lane pair swap (inverts data for given  lane)
 
 		.VC(2'b00), // MIPI CSI-2 "virtual channel"
 		.FS_DT(6'h12), // Frame start data type
