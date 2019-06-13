@@ -114,7 +114,7 @@ module csi_rx_packet_handler #(
 					end
 
 					3'b011: state <= 3'b100; // end of packet, assert packet_done
-					3'b100: state <= 3'b001; // wait one cycle and reset
+					3'b100: state <= 3'b000; // wait one cycle and reset
 
 					default: state <= 3'b000;
 				endcase
