@@ -52,8 +52,13 @@ module top(input clk25,
 		   input 	dphy_lp_n,
 		   output 	i2c_sel,
 		   output 	csi_sel,
-	   output dbg_tx
-);
+		   output 	dbg_wait_sync,
+		   output [3:0] dbg_extra,
+		   output 	dbg_dphy_clk,
+		   output 	dbg_dphy_lp,
+		   output 	dbg_video_clk,
+		   output 	dbg_sreset,
+		   output 	dbg_tx);
 
    assign i2c_sel = 1'b0;
    assign csi_sel = 1'b1;
@@ -76,6 +81,12 @@ module top(input clk25,
 	wire wait_sync;
 	wire payload_frame;
 
+   assign dbg_video_clk = video_clk;
+   assign    dbg_wait_sync = wait_sync;
+   assign    dbg_extra[1:0] = raw_ddr[1:0];
+   assign    dbg_extra[3:2] = aligned_valid;
+   //assign    dbg_extra = raw_ddr;
+   //assign    dbg_extra[3:2] = raw_deser[1:0];
   
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
@@ -103,6 +114,14 @@ module top(input clk25,
 		.vsync(vsync),
 		.in_line(in_line),
 		.in_frame(in_frame),
+
+		.dbg_dphy_clk(dbg_dphy_clk),
+		.dbg_aligned_valid(aligned_valid),
+		.dbg_raw_deser(raw_deser),
+		.dbg_raw_ddr(raw_ddr),
+		.dbg_wait_sync(wait_sync),
+		.dbg_dphy_lp(dbg_dphy_lp),
+		    .dbg_sreset(dbg_sreset),
 		    
 	);
 
