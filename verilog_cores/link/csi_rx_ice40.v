@@ -205,7 +205,7 @@ module csi_rx_ice40 #(
 		.data_enable(comb_word_en),
 		.data_frame(comb_word_frame),
 
-		.lp_detect(dphy_lp),
+		.lp_detect(!dphy_lp),
 
 		.sync_wait(wait_for_sync),
 		.packet_done(word_packet_done),
