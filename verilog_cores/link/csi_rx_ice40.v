@@ -135,7 +135,7 @@ module csi_rx_ice40 #(
 		wire [7:0] din_deser;
 	   wire [7:0] 	   reg_deser;
 		dphy_iserdes #(
-			.REG_INPUT(1'b1)
+			.REG_INPUT(1'b0)
 		) iserdes_i (
 		   .dphy_clk(dphy_clk),
 		   .din(din_raw),
