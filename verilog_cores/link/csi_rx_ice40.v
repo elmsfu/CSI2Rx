@@ -148,6 +148,7 @@ module csi_rx_ice40 #(
 	   
     	   wire [7:0] 	   din_deser_swap = PAIRSWAP[ii] ? ~din_deser : din_deser;
 	   assign dbg_raw_deser[8*ii+7:8*ii] = din_deser_swap;
+	   //assign dbg_aligned_valid[ii] = &(din_deser ^ 8'b10111000);
 
 		dphy_rx_byte_align baligner_i (
 			.clock(word_clk),
