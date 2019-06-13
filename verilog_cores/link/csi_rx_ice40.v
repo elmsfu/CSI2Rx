@@ -133,6 +133,7 @@ module csi_rx_ice40 #(
 		assign dbg_raw_ddr[2*ii+1:2*ii] = din_raw;
 
 		wire [7:0] din_deser;
+	   wire [7:0] 	   reg_deser;
 		dphy_iserdes #(
 			.REG_INPUT(1'b1)
 		) iserdes_i (
@@ -140,13 +141,14 @@ module csi_rx_ice40 #(
 		   .din(din_raw),
 		   .sys_clk(word_clk),
 		   .areset(areset),
+		   .reg_out(reg_deser),
 		   .dout(din_deser)
 	    );
 
 	   
     	   wire [7:0] 	   din_deser_swap = PAIRSWAP[ii] ? ~din_deser : din_deser;
 	   assign dbg_raw_deser[8*ii+7:8*ii] = din_deser_swap;
-	   assign dbg_aligned_valid[ii] = (~din_deser == 8'b10111000);
+	   assign dbg_aligned_valid[ii] = reg_deser[0];
 
 		dphy_rx_byte_align baligner_i (
 			.clock(word_clk),

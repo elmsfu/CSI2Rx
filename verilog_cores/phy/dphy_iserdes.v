@@ -29,11 +29,13 @@
  */
 
 module dphy_iserdes(
-	input dphy_clk, // Fast D-PHY DDR clock (4x sys_clk)
-	input [1:0] din, // Input from arch DDR primitive, D1 should be the bit after D0
-	input sys_clk, // System byte clock
-	input areset, // Active high async reset
+	input 	     dphy_clk, // Fast D-PHY DDR clock (4x sys_clk)
+	input [1:0]  din, // Input from arch DDR primitive, D1 should be the bit after D0
+	input 	     sys_clk, // System byte clock
+	input 	     areset, // Active high async reset
+	output [7:0] reg_out,	     
 	output [7:0] dout // Output data
+
 );
 
 	parameter REG_INPUT = 1'b0;
@@ -55,7 +57,8 @@ module dphy_iserdes(
 	endgenerate
 
 	reg [7:0] reg_word;
-
+        assign reg_out = reg_word;
+   
 	always @(posedge dphy_clk, posedge areset)
 		if (areset)
 			reg_word <= 0;
@@ -73,6 +76,6 @@ module dphy_iserdes(
 				out_sync_regs[i] <= out_sync_regs[i-1];
 			out_sync_regs[0] <= reg_word;
 		end
-
+   
 	assign dout = out_sync_regs[NUM_OUT_SYNCFFS-1];
 endmodule
