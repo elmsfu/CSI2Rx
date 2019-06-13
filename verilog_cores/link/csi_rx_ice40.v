@@ -140,7 +140,7 @@ module csi_rx_ice40 #(
 		   .dphy_clk(dphy_clk),
 		   .din(din_raw),
 		   .sys_clk(word_clk),
-		   .areset(areset),
+		   .areset(sreset),
 		   .reg_out(reg_deser),
 		   .dout(din_deser)
 	    );

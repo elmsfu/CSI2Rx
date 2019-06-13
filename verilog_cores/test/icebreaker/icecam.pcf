@@ -34,7 +34,8 @@ set_io dbg_extra[1] 12
 set_io dbg_extra[2] 47
 set_io dbg_extra[3] 2
 set_io dbg_dphy_clk 48
-set_io dbg_video_clk 46
+#set_io dbg_video_clk 46
+set_io dbg_sreset 46
 #set_io dbg_wait_sync 46
 
 set_io i2c_sel 39

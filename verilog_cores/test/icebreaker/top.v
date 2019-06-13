@@ -46,18 +46,19 @@ SB_PLL40_CORE #(
 endmodule
 
 module top(input clk25,
-		   input  mpsse_sda, mpsse_scl, inout cam_sda, cam_scl, output cam_enable,
-		   input  dphy_clk, input [1:0] dphy_data, input dphy_lp,
-		   input  dphy_lp_p,
-		   input  dphy_lp_n,
-		   output i2c_sel,
-		   output csi_sel,
-		   output dbg_wait_sync,
+		   input 	mpsse_sda, mpsse_scl, inout cam_sda, cam_scl, output cam_enable,
+		   input 	dphy_clk, input [1:0] dphy_data, input dphy_lp,
+		   input 	dphy_lp_p,
+		   input 	dphy_lp_n,
+		   output 	i2c_sel,
+		   output 	csi_sel,
+		   output 	dbg_wait_sync,
 		   output [3:0] dbg_extra,
-		   output dbg_dphy_clk,
-		   output dbg_dphy_lp,
-		   output dbg_video_clk,
-		   output dbg_tx);
+		   output 	dbg_dphy_clk,
+		   output 	dbg_dphy_lp,
+		   output 	dbg_video_clk,
+		   output 	dbg_sreset,
+		   output 	dbg_tx);
 
    assign i2c_sel = 1'b0;
    assign csi_sel = 1'b1;
@@ -79,13 +80,14 @@ module top(input clk25,
 	wire [1:0] aligned_valid;
 	wire wait_sync;
 	wire payload_frame;
-   //assign dbg_video_clk = video_clk;
+
+   assign dbg_video_clk = video_clk;
    assign    dbg_wait_sync = wait_sync;
    assign    dbg_extra[1:0] = raw_ddr[1:0];
    assign    dbg_extra[3:2] = aligned_valid;
    //assign    dbg_extra = raw_ddr;
    //assign    dbg_extra[3:2] = raw_deser[1:0];
-   
+  
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
 		.PAIRSWAP(2'b00), // lane pair swap (inverts data for given  lane)
@@ -119,7 +121,7 @@ module top(input clk25,
 		.dbg_raw_ddr(raw_ddr),
 		.dbg_wait_sync(wait_sync),
 		.dbg_dphy_lp(dbg_dphy_lp),
-		//.dbg_sreset(dbg_wait_sync),
+		    .dbg_sreset(dbg_sreset),
 		    
 	);
 
