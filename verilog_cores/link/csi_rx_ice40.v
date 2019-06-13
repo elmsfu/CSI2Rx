@@ -148,9 +148,6 @@ module csi_rx_ice40 #(
 	   
     	   wire [7:0] 	   din_deser_swap = PAIRSWAP[ii] ? ~din_deser : din_deser;
 	   assign dbg_raw_deser[8*ii+7:8*ii] = din_deser_swap;
-	   if (ii==0) begin
-	      assign dbg_aligned_valid[1:0] = din_deser_swap[1:0];
-	   end
 
 		dphy_rx_byte_align baligner_i (
 			.clock(word_clk),
@@ -167,7 +164,7 @@ module csi_rx_ice40 #(
 	endgenerate
 
 	assign dbg_aligned = aligned_bytes;
-   //assign dbg_aligned_valid = aligned_bytes_valid;
+   assign dbg_aligned_valid = aligned_bytes_valid;
 
 	wire [31:0] comb_word;
 	wire comb_word_en, comb_word_frame;
