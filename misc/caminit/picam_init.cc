@@ -207,21 +207,21 @@ static void cam_init() {
 	//write_cmos_sensor(0x0600,  0x00); // Test pattern: disable
 	//write_cmos_sensor(0x0601,  0x00); // Test pattern: disable
 
-#if 0
+#if 1
 	write_cmos_sensor(0x0600,  0x00); // Test pattern: solid colour
 	write_cmos_sensor(0x0601,  0x01); //
 
 	write_cmos_sensor(0x0602,  0x02); // Test pattern: red
-	write_cmos_sensor(0x0603,  0xAA); //
+	write_cmos_sensor(0x0603,  0xFF); //
 
 	write_cmos_sensor(0x0604,  0x02); // Test pattern: greenR
-	write_cmos_sensor(0x0605,  0xAA); //
+	write_cmos_sensor(0x0605,  0xFF); //
 
 	write_cmos_sensor(0x0606,  0x02); // Test pattern: blue
-	write_cmos_sensor(0x0607,  0xAA); //
+	write_cmos_sensor(0x0607,  0xFF); //
 
 	write_cmos_sensor(0x0608,  0x02); // Test pattern: greenB
-	write_cmos_sensor(0x0609,  0xAA); //
+	write_cmos_sensor(0x0609,  0xFF); //
 
 
 	write_cmos_sensor(0x0624,  0x0A); // Test pattern width
