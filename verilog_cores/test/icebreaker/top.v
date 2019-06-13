@@ -177,22 +177,22 @@ module top(input clk25,
 	reg do_send = 1'b0;
 	wire uart_busy;
 	reg uart_write;
-	reg [13:0] btn_debounce;
+	reg [23:0] btn_debounce;
 	reg btn_reg;
 	reg [12:0] uart_holdoff;
 
 	always @(posedge clk12)
 	begin
-		// btn_reg <= BTN1;
+		btn_reg <= 1'b1;
 
-		// if (btn_reg)
-		// 	btn_debounce <= 0;
-		// else if (!&(btn_debounce))
-		// 	btn_debounce <= btn_debounce + 1;
+		if (btn_reg)
+			btn_debounce <= 0;
+		else if (!&(btn_debounce))
+			btn_debounce <= btn_debounce + 1;
 
 
 		uart_write <= 1'b0;
-		if (!do_send) begin
+		if (btn_reg && &btn_debounce && !do_send) begin
 			do_send <= 1'b1;
 			read_x <= 0;
 			read_y <= 0;

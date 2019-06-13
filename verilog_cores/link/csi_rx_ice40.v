@@ -127,8 +127,8 @@ module csi_rx_ice40 #(
 		) data_iobuf (
 			.PACKAGE_PIN(dphy_data_lane[ii]),
 			.INPUT_CLK(dphy_clk),
-			.D_IN_0(din_raw[1]),
-			.D_IN_1(din_raw[0])
+			.D_IN_0(din_raw[0]),
+			.D_IN_1(din_raw[1])
 		);
 		assign dbg_raw_ddr[2*ii+1:2*ii] = din_raw;
 
