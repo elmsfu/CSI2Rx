@@ -90,7 +90,7 @@ module top(input clk25,
   
 	csi_rx_ice40 #(
 		.LANES(2), // lane count
-		.PAIRSWAP(2'b11), // lane pair swap (inverts data for given  lane)
+		.PAIRSWAP(2'b00), // lane pair swap (inverts data for given  lane)
 
 		.VC(2'b00), // MIPI CSI-2 "virtual channel"
 		.FS_DT(6'h12), // Frame start data type
