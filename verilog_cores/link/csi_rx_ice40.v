@@ -127,8 +127,8 @@ module csi_rx_ice40 #(
 		) data_iobuf (
 			.PACKAGE_PIN(dphy_data_lane[ii]),
 			.INPUT_CLK(dphy_clk),
-			.D_IN_0(din_raw[1]),
-			.D_IN_1(din_raw[0])
+			.D_IN_0(din_raw[0]),
+			.D_IN_1(din_raw[1])
 		);
 		assign dbg_raw_ddr[2*ii+1:2*ii] = din_raw;
 
@@ -148,7 +148,7 @@ module csi_rx_ice40 #(
 	   
     	   wire [7:0] 	   din_deser_swap = PAIRSWAP[ii] ? ~din_deser : din_deser;
 	   assign dbg_raw_deser[8*ii+7:8*ii] = din_deser_swap;
-	   assign dbg_aligned_valid[ii] = ({din_deser_swap[0], din_deser_swap[2], din_deser_swap[4], din_deser_swap[6]} == 4'b1111);
+	   assign dbg_aligned_valid[ii] = ({din_deser_swap[0], din_deser_swap[2], din_deser_swap[4], din_deser_swap[6]} == 4'b0111);
 
 		dphy_rx_byte_align baligner_i (
 			.clock(word_clk),
