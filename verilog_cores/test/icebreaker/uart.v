@@ -26,10 +26,11 @@ module uart(
   wire uart_busy = |bitcount[3:1];
   wire sending = |bitcount;
 
-  // sys_clk_i is 12MHz.  We want a 3MHz clock
-
+  // sys_clk_i is 12MHz.  We want a BAUD clock
+  localparam BAUD = 115200;
+   
   reg [28:0] d;
-  wire [28:0] dInc = d[28] ? (3000000) : (3000000 - 12000000);
+  wire [28:0] dInc = d[28] ? (BAUD) : (BAUD - 12000000);
   wire [28:0] dNxt = d + dInc;
   always @(posedge sys_clk_i)
   begin
